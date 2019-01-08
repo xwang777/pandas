@@ -3890,7 +3890,12 @@ class Index(IndexOpsMixin, PandasObject):
         https://github.com/pandas-dev/pandas/issues/19764
         """
         if self.is_object() or self.is_categorical():
-            return name in self
+            try: 
+                # name likely not convertible to valid dtype in the index, catch and return False here
+                # see https://github.com/pandas-dev/pandas/issues/24570
+                return name in self
+            except Exception:
+                return False
         return False
 
     def append(self, other):
